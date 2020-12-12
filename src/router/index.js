@@ -10,11 +10,50 @@ const routes = [
   },
   {
     path: '/login',
-    component: () => import('../views/login/Login.vue')
+    component: () => import('views/login/Login')
   },
   {
     path: '/home',
-    component: () => import('../views/home/home.vue')
+    redirect: '/welcome',
+    component: () => import('views/home/Home'),
+    children: [
+      {
+        path: '/welcome',
+        component: () => import('views/welcome/Welcome')
+      },
+      {
+        path: '/users',
+        component: () => import('views/users/Users')
+      },
+      {
+        path: '/roles',
+        component: () => import('views/roles/Roles')
+      },
+      {
+        path: '/rights',
+        component: () => import('views/rights/Rights')
+      },
+      {
+        path: '/goods',
+        component: () => import('views/goods/Goods')
+      },
+      {
+        path: '/params',
+        component: () => import('views/params/Params')
+      },
+      {
+        path: '/categories',
+        component: () => import('views/categories/Categories')
+      },
+      {
+        path: '/orders',
+        component: () => import('views/orders/Orders')
+      },
+      {
+        path: '/reports',
+        component: () => import('views/reports/Reports')
+      }
+    ]
   }
 ]
 

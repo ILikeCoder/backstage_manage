@@ -45,7 +45,7 @@ export default {
       //登录数据
       loginForm: {
         username: 'admin',
-        password: '123456',
+        password: '123456'
       },
       //表单校验规则
       loginFormRules: {
@@ -53,37 +53,37 @@ export default {
           {
             required: true,
             message: '请输入用户名',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             min: 3,
             max: 10,
             message: '长度在 3-10 个字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         password: [
           {
             required: true,
             message: '请输入密码',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             min: 6,
             max: 18,
             message: '长度在 6-18 个字符',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       },
       valid: false,
-      token: '',
+      token: ''
     }
   },
   methods: {
     //登录
     async login() {
-      this.$refs.loginFormRef.validate((valid) => {
+      this.$refs.loginFormRef.validate(valid => {
         this.valid = valid
       })
       if (!this.valid) return
@@ -94,7 +94,7 @@ export default {
         this.token = res.data.token
         window.sessionStorage.setItem('token', this.token)
         this.$router.push('/home')
-        this.$Message.success('亲~ 登录成功')
+        this.$Message.success('亲~ 登录成功! ')
       } else {
         this.$Message.error('亲~ 用户名或密码错误,请重新输入！')
       }
@@ -102,8 +102,8 @@ export default {
     // 重置登录表单
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields()
-    },
-  },
+    }
+  }
 }
 </script>
 
