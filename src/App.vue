@@ -1,7 +1,15 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
+
 <script>
-export default {};
+export default {
+  name: 'app'
+}
 </script>
-<style></style>
+
+<style>
+@import url('./assets/css/global.css');
+</style>
