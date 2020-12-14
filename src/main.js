@@ -5,6 +5,7 @@ import router from './router'
 /** 第三方组件 */
 import './plugins/element'
 import 'element-ui/lib/theme-chalk/index.css'
+Vue.config.productionTip = false
 
 /** 网络请求封装 */
 import axios from 'axios'
@@ -14,6 +15,7 @@ axios.interceptors.request.use(config => {
   return config
 })
 Vue.prototype.$http = axios
+
 new Vue({
   router,
   render: h => h(App)
