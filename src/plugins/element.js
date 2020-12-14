@@ -23,8 +23,13 @@ import {
   Tooltip,
   Pagination,
   Dialog,
-  MessageBox
+  MessageBox,
+  Tag
 } from 'element-ui'
+
+// 面包屑公共组件
+import BreadCrumb from 'components/common/BreadCrumb'
+Vue.component('bread-crumb', BreadCrumb)
 
 Vue.use(Button)
 Vue.use(Form)
@@ -48,5 +53,6 @@ Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
+Vue.use(Tag)
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$Message = Message

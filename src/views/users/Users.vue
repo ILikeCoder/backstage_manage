@@ -1,12 +1,7 @@
 <template>
   <div>
     <!-- 面包屑区域 -->
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
-
+    <bread-crumb :content="content" />
     <!-- 卡片视图区域 -->
     <el-card>
       <el-row :gutter="20">
@@ -28,49 +23,12 @@
           <el-button type="primary" @click="addDialogVisible = true"
             >添加用户</el-button
           >
-          <!-- 添加用户对话框 -->
-          <el-dialog
-            title="添加用户"
-            width="50%"
-            :visible.sync="addDialogVisible"
-            @close="addDialogClosed"
-          >
-            <!-- 内容主体区域 -->
-            <el-form
-              :model="addForm"
-              :rules="addFormRules"
-              ref="ruleFormRef"
-              label-width="70px"
-            >
-              <el-form-item label="用户名" prop="username">
-                <el-input v-model="addForm.username"></el-input>
-              </el-form-item>
-              <el-form-item label="密码" prop="password">
-                <el-input v-model="addForm.password"></el-input>
-              </el-form-item>
-              <el-form-item label="邮箱" prop="email">
-                <el-input v-model="addForm.email"></el-input>
-              </el-form-item>
-              <el-form-item label="电话" prop="mobile">
-                <el-input v-model="addForm.mobile"></el-input>
-              </el-form-item>
-            </el-form>
-
-            <!-- 底部区域 -->
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="addDialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="addUserInfo">添 加</el-button>
-            </span>
-          </el-dialog>
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
       <el-table :data="userList" border stripe>
         <el-table-column type="index"></el-table-column>
-        <el-table-column label="姓名" prop="username"></el-table-column>
-        <el-table-column label="邮箱" prop="email"></el-table-column>
-        <el-table-column label="电话" prop="mobile"></el-table-column>
-        <el-table-column label="角色" prop="role_name"></el-table-column>
+        <el-table-column v-for="item in columnList" :label="item.label" :prop="item.prop"></el-table-column>
         <el-table-column label="状态">
           <template v-slot="scoped">
             <el-switch
@@ -120,6 +78,41 @@
         layout="total, sizes, prev, pager, next, jumper"
       >
       </el-pagination>
+      <!-- 添加用户对话框 -->
+      <el-dialog
+        title="添加用户"
+        width="50%"
+        :visible.sync="addDialogVisible"
+        @close="addDialogClosed"
+      >
+        <!-- 内容主体区域 -->
+        <el-form
+          :model="addForm"
+          :rules="addFormRules"
+          ref="ruleFormRef"
+          label-width="70px"
+        >
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="addForm.username"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="addForm.password"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="addForm.email"></el-input>
+          </el-form-item>
+          <el-form-item label="电话" prop="mobile">
+            <el-input v-model="addForm.mobile"></el-input>
+          </el-form-item>
+        </el-form>
+
+        <!-- 底部区域 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addUserInfo">添 加</el-button>
+        </span>
+      </el-dialog>
+
       <!-- 修改用户信息对话框 -->
       <el-dialog
         title="修改用户"
@@ -155,14 +148,41 @@
 </template>
 
 <script>
+import BreadCrumb from '../../components/common/BreadCrumb.vue'
 export default {
+  components: { BreadCrumb },
   data() {
     return {
+      //请求用户数据的参数
       queryInfo: {
         query: '',
         pagenum: 1,
         pagesize: 5
       },
+      //面包屑数据
+      content: [
+        { content: '首页', path: { path: '/home' } },
+        { content: '用户管理', path: '' },
+        { content: '用户列表', path: '' }
+      ],
+      columnList: [
+        {
+          label: '姓名',
+          prop: 'username'
+        },
+        {
+          label: '邮箱',
+          prop: 'email'
+        },
+        {
+          label: '电话',
+          prop: 'mobile'
+        },
+        {
+          label: '角色',
+          prop: 'role_name'
+        }
+      ],
       userList: [],
       total: 0,
       addDialogVisible: false,
