@@ -7,7 +7,9 @@ body,
   width: 100%;
   padding: 0;
   margin: 0;
+  min-width: 1366px;
 }
+
 
 .el-breadcrumb {
   margin-bottom: 15px;

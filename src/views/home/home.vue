@@ -138,11 +138,12 @@ export default {
 }
 .toggle-button {
   background-color: #4a5064;
-  color: #fff;
-  font-size: 10px;
+  color: #c7c7c7;
+  font-size: 14px;
   text-align: center;
   line-height: 24px;
   letter-spacing: 0.3em;
+  font-weight: 700;
   cursor: pointer;
 }
 .el-main {
