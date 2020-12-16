@@ -43,7 +43,7 @@ const routes = [
       },
       {
         path: '/categories',
-        component: () => import('views/categories/Categories')
+        component: () => import('views/goods/Categories')
       },
       {
         path: '/orders',
