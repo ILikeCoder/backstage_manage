@@ -2,6 +2,7 @@
   <div>
     <!-- 面包屑 -->
     <bread-crumb :content="content" />
+    <!-- 卡片视图 -->
     <el-card>
       <el-table :data="rightsList" border stripe>
         <el-table-column type="index"></el-table-column>
@@ -33,6 +34,7 @@ export default {
         { content: '权限管理', path: '' },
         { content: '权限列表', path: '' }
       ],
+      // 保存所有的权限
       rightsList: []
     }
   },
@@ -40,6 +42,7 @@ export default {
     this.getRightsList()
   },
   methods: {
+    // 获取所有权限
     async getRightsList() {
       const { data: res } = await this.$http.get('rights/list')
       this.rightsList = res.data

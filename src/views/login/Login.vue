@@ -5,7 +5,7 @@
       <div class="avatar_box">
         <img src="~assets/img/logo.png" />
       </div>
-      <!-- 登录区域 login -->
+      <!-- 登录区域 login  model-数据源 rules-表单验证规则 ref-当前组件的引用 -->
       <el-form
         ref="loginFormRef"
         :rules="loginFormRules"
@@ -13,14 +13,14 @@
         class="login_form"
         :model="loginForm"
       >
-        <!-- userName -->
+        <!-- userName  prop- 对当前输入框验证 -->
         <el-form-item prop="username">
           <el-input
             v-model="loginForm.username"
             prefix-icon="el-icon-s-custom"
           ></el-input>
         </el-form-item>
-        <!-- passWord -->
+        <!-- passWord 1102-->
         <el-form-item prop="password">
           <el-input
             v-model="loginForm.password"
@@ -76,6 +76,7 @@ export default {
           }
         ]
       },
+      //表单验证通过时变为true
       valid: false,
       token: ''
     }
@@ -86,20 +87,23 @@ export default {
       this.$refs.loginFormRef.validate(valid => {
         this.valid = valid
       })
+      //表单验证不通过直接退出函数
       if (!this.valid) return
-      //发送登录验证
+      //发送登录验证请求
       let { data: res } = await this.$http.post('login', this.loginForm)
+
+      if (res.meta.status !== 200)
+        return this.$Message.error('亲~ 用户名或密码错误,请重新输入！')
+
       //登录成功的操作 在会话层保存token值,发送路由跳转
-      if (res.meta.status === 200) {
-        this.token = res.data.token
-        window.sessionStorage.setItem('token', this.token)
-        this.$router.push('/home')
-        this.$Message.success('亲~ 登录成功! ')
-      } else {
-        this.$Message.error('亲~ 用户名或密码错误,请重新输入！')
-      }
+      this.token = res.data.token
+      //在sessionStorage保存当前token
+      window.sessionStorage.setItem('token', this.token)
+      //登录成功跳转路由
+      this.$router.push('/home')
+      this.$Message.success('亲~ 登录成功! ')
     },
-    // 重置登录表单
+    // 点击重置按钮 重置登录表单
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields()
     }

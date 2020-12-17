@@ -2,10 +2,12 @@
   <div>
     <!-- 面包屑区域 -->
     <bread-crumb :content="content" />
+
     <!-- 卡片视图区域 -->
     <el-card>
       <el-row :gutter="20">
         <el-col :span="8">
+          <!-- 搜索框区域 -->
           <el-input
             clearable
             @clear="getUserList"
@@ -20,14 +22,16 @@
           </el-input>
         </el-col>
         <el-col :span="4">
+          <!-- 添加用户功能 点击的时候弹出对话框 -->
           <el-button type="primary" @click="addDialogVisible = true"
             >添加用户</el-button
           >
         </el-col>
       </el-row>
-      <!-- 用户列表区域 -->
+      <!-- 用户列表区域  data是数据源 边框 鼠标覆盖高亮-->
       <el-table :data="userList" border stripe>
         <el-table-column type="index"></el-table-column>
+        <!-- 渲染 姓名 邮箱 电话 -->
         <el-table-column
           v-for="item in columnList"
           :label="item.label"
@@ -35,6 +39,7 @@
           :key="item.label"
         ></el-table-column>
         <el-table-column label="状态">
+          <!-- 自定义插槽内容 作用域插槽 -->
           <template v-slot="scoped">
             <el-switch
               v-model="scoped.row.mg_state"
@@ -42,6 +47,7 @@
             ></el-switch>
           </template>
         </el-table-column>
+
         <el-table-column label="操作" width="180px">
           <template v-slot="scoped">
             <!-- 修改按钮 -->
@@ -93,10 +99,10 @@
       >
         <!-- 内容主体区域 -->
         <el-form
+          ref="addUserFormRef"
+          label-width="70px"
           :model="addForm"
           :rules="addFormRules"
-          ref="ruleFormRef"
-          label-width="70px"
         >
           <el-form-item label="用户名" prop="username">
             <el-input v-model="addForm.username"></el-input>
@@ -186,9 +192,7 @@
 </template>
 
 <script>
-import BreadCrumb from '../../components/common/BreadCrumb.vue'
 export default {
-  components: { BreadCrumb },
   data() {
     return {
       //请求用户数据的参数
@@ -203,6 +207,7 @@ export default {
         { content: '用户管理', path: '' },
         { content: '用户列表', path: '' }
       ],
+      //渲染数据源
       columnList: [
         {
           label: '姓名',
@@ -221,9 +226,13 @@ export default {
           prop: 'role_name'
         }
       ],
+      //用户列表
       userList: [],
+      // 总页数
       total: 0,
+      // 控制添加用户对话框
       addDialogVisible: false,
+      // 编辑添加用户对话框
       editDialogVisible: false,
       //添加用户的表单信息
       addForm: {
@@ -283,10 +292,13 @@ export default {
           }
         ]
       },
+      // 验证是否通过
       valid: false,
+      // 修改用户验证是否通过
       editValid: false,
+      // 编辑用户的数据表单
       editForm: {},
-      //修改用户的表单验证规则
+      //编辑用户的表单验证规则
       editFormRules: {
         email: [
           {
@@ -311,8 +323,9 @@ export default {
           }
         ]
       },
-      // 控制分配角色对话框的显示
+      // 控制分配角色对话框
       setRoleDialogVisible: false,
+
       userInfo: {},
       // 所有角色的数据列表
       rolesList: [],
@@ -320,11 +333,12 @@ export default {
       selectedRoleId: ''
     }
   },
+  // 请求数据
   created() {
     this.getUserList()
   },
   methods: {
-    //邮箱验证规则
+    //自定义邮箱验证规则
     checkEmail(rule, value, callback) {
       const regEmail = /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/
       if (regEmail.test(value)) {
@@ -334,7 +348,7 @@ export default {
         callback(new Error('邮箱格式不正确'))
       }
     },
-    //手机验证规则
+    //自定义手机验证规则
     checkMobile(rule, value, callback) {
       const regMobile = /^[1][3,4,5,7,8][0-9]{9}$/
       if (regMobile.test(value)) {
@@ -381,22 +395,24 @@ export default {
     },
     //添加新用户信息
     async addUserInfo() {
-      this.$refs.ruleFormRef.validate(valid => {
+      this.$refs.addUserFormRef.validate(valid => {
         this.valid = valid
-        if (this.valid) return
       })
+      //添加用户表单验证不通过直接退出
+      if (!this.valid) return
+      // 发送添加用户的请求
       const { data: res } = await this.$http.post('users', this.addForm)
-      if (res.meta.status !== 201) {
-        this.$Message.error('添加用户数据失败!')
-      } else {
-        this.$Message.success('添加用户数据成功~')
-      }
+      if (res.meta.status !== 201)
+        return this.$Message.error('添加用户数据失败!')
+      this.$Message.success('添加用户数据成功~')
+      //关闭添加用户对话框
       this.addDialogVisible = false
+      //刷新列表
       this.getUserList()
     },
     //关闭添加用户对话框重置表单
     addDialogClosed() {
-      this.$refs.ruleFormRef.resetFields()
+      this.$refs.addUserFormRef.resetFields()
     },
     //关闭修改对话框重置表单
     editDialogClosed() {
@@ -414,18 +430,24 @@ export default {
 
     async editUserInfo() {
       this.$refs.editFormRef.validate(valid => {
+        //报存编辑用户表单验证通过的布尔值
         this.editValid = valid
       })
+      // 验证不通过直接退出
       if (!this.editValid) return
+      // 解构赋值
       const { id, mobile, email } = this.editForm
       const { data: res } = await this.$http.put('users/' + id, {
         email,
         mobile
       })
-      console.log(res.data)
-      if (res.meta.status !== 200) return this.$Message.error('修改用户数据')
+      // 如果状态不登录200
+      if (res.meta.status !== 200)
+        return this.$Message.error('修改用户数据失败')
       this.$Message.success('修改用户数据成功!')
+      // 刷新用户数据
       this.getUserList()
+      // 关闭对话框
       this.editDialogVisible = false
     },
     //删除用户信息
@@ -445,6 +467,7 @@ export default {
       const { data: res } = await this.$http.delete('users/' + id)
       if (res.meta.status !== 200) return this.$Message.error('请求删除失败')
       this.$Message.success('删除成功')
+      // 删除成功刷新列表
       this.getUserList()
     },
 
@@ -468,15 +491,15 @@ export default {
         }
       )
 
-      if (res.meta.status === 200) {
-        this.$Message.success('分配角色成功')
-      } else {
-        this.$Message.error('分配角色失败')
-      }
+      if (res.meta.status !== 200) return this.$Message.error('分配角色失败')
+
+      this.$Message.success('分配角色成功')
+      // 刷新用户列表
       this.getUserList()
       //关闭对话框
       this.setRoleDialogVisible = false
     },
+    // 关闭对话框把表单重置
     closedDialog() {
       this.selectedRoleId = ''
       this.userInfo = {}

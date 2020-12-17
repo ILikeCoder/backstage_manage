@@ -23,9 +23,9 @@
             >
               <!-- 一级权限 -->
               <el-col :span="5">
-                <el-tag closable @close="romveRightById(scoped.row, item.id)">{{
-                  item.authName
-                }}</el-tag>
+                <el-tag closable @close="romveRightById(scoped.row, item.id)">
+                  {{ item.authName }}</el-tag
+                >
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <el-col :span="19">
@@ -65,26 +65,26 @@
         <el-table-column label="角色名称" prop="roleName"></el-table-column>
         <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
         <el-table-column label="操作" width="300px">
-          <template v-slot="scoped">
+          <template v-slot="scope">
             <el-button
               size="mini"
               type="primary"
               icon="el-icon-edit"
-              @click="editRole(scoped.row.id)"
+              @click="editRole(scope.row.id)"
               >编辑</el-button
             >
             <el-button
               size="mini"
               type="danger"
               icon="el-icon-delete"
-              @click="deleteRole(scoped.row.id)"
+              @click="deleteRole(scope.row.id)"
               >删除</el-button
             >
             <el-button
               size="mini"
               type="warning"
               icon="el-icon-setting"
-              @click="showSetRightDialog(scoped.row)"
+              @click="showSetRightDialog(scope.row)"
               >分配权限</el-button
             >
           </template>
@@ -191,20 +191,23 @@ export default {
         roleName: '',
         roleDesc: ''
       },
+      // 编辑角色的对话框显示隐藏
       editRoleDialogVisible: false
     }
   },
+  //获取所有角色信息列表
   created() {
     this.getRolesList()
   },
   methods: {
     // 获取所有角色信息列表
     async getRolesList() {
+      //发送获取角色信息请求
       const { data: res } = await this.$http.get('roles')
 
-      if (res.meta.status !== 200) {
-        this.$Message.error('获取角色列表失败')
-      }
+      if (res.meta.status !== 200)
+        return this.$Message.error('获取角色列表失败')
+      //保存角色列表
       this.rolesList = res.data
     },
     //处理删除权限的操作
@@ -226,8 +229,7 @@ export default {
       )
       if (res.meta.status !== 200) return this.$Message.error('请求删除失败')
       this.$Message.success('删除成功')
-      // this.getRolesList()
-
+      //删除权限时刷新小权限
       role.children = res.data
     },
     //展示分配权限对话框
@@ -245,13 +247,13 @@ export default {
       //弹出对话框
       this.setRightDialogVisible = true
     },
-    /** 通过递归的形式获取角色下的三级权限
+    /**
+     * 通过递归的形式获取角色下的三级权限
      * 并保存在defKeys数组中
      */
+
     getLeafKeys(node, arr) {
-      if (!node.children) {
-        return arr.push(node.id)
-      }
+      if (!node.children) return arr.push(node.id)
       node.children.forEach(item => this.getLeafKeys(item, arr))
     },
     //关闭对话框重置数组默认选项
@@ -276,8 +278,8 @@ export default {
       if (res.meta.status !== 200)
         return this.$Message.error('分配角色权限失败了')
       this.$Message.success('分配权限操作完成')
-      this.getRolesList()
 
+      this.getRolesList()
       this.setRightDialogVisible = false
     },
 
@@ -309,6 +311,7 @@ export default {
         roleDesc: ''
       }
     },
+
     //编辑功能
     editRole(id) {
       this.roleId = id

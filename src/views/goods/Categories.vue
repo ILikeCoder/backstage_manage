@@ -136,16 +136,19 @@
 export default {
   data() {
     return {
+      // 面包屑数据
       content: [
         { content: '首页', path: { path: '/home' } },
         { content: '商品管理', path: '' },
         { content: '商品分类', path: '' }
       ],
+      // 请求参数
       queryInfo: {
         type: 3,
         pagenum: 1,
         pagesize: 5
       },
+      // 树形图数据源
       cateList: [],
       total: 0,
       columns: [
@@ -172,6 +175,7 @@ export default {
       //控制对话框
       dialogVisible: false,
 
+      // 表单数据源
       addCateForm: {
         cat_name: '',
         cat_pid: 0,
@@ -187,6 +191,7 @@ export default {
           }
         ]
       },
+      // 父分类列表
       parentCateList: [],
 
       cascaderProps: {
@@ -207,6 +212,7 @@ export default {
     this.getCateList()
   },
   methods: {
+    // 获取分类列表
     async getCateList() {
       const { data: res } = await this.$http.get('categories', {
         params: this.queryInfo
@@ -240,18 +246,16 @@ export default {
           type: 2
         }
       })
-      if (res.meta.status !== 200) {
-        this.$Message.error('获取分类数据失败')
-      }
+      if (res.meta.status !== 200)
+        return this.$Message.error('获取分类数据失败')
+
       this.parentCateList = res.data
     },
-
     // 级联选择器发生变化触发
     parentCateChanged() {
       if (this.selectdKeys.length > 0) {
         this.addCateForm.cat_pid = this.selectdKeys[this.selectdKeys.length - 1]
         this.addCateForm.cat_level = this.selectdKeys.length
-        return
       } else {
         this.addCateForm.cat_pid = 0
         this.addCateForm.cat_level = 0
@@ -295,14 +299,16 @@ export default {
       const { data: res } = await this.$http.delete('categories/' + id)
       if (res.meta.status !== 200) return this.$Message.error('删除失败了！')
       this.$Message.success('删除成功')
+      // 刷新分类列表
       this.getCateList()
     },
 
-    // 修改分类名称
+    // 编辑分类按钮是
     editCate(id) {
       this.currentId = id
       this.editDialogVisible = true
     },
+    // 编辑分类对话框
     async editCateInfo() {
       const { data: res } = await this.$http.put(
         'categories/' + this.currentId,
@@ -315,6 +321,7 @@ export default {
       this.getCateList()
       this.editDialogVisible = false
     },
+    // 关闭对话框重置表单
     editDialogClosed() {
       this.$refs.editCateRef.resetFields()
     }
@@ -323,6 +330,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 .tree-table {
   margin-top: 20px;
 }
