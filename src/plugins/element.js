@@ -28,14 +28,17 @@ import {
   Tree,
   Select,
   Option,
-  Cascader
+  Cascader,
+  Alert,
+  Tabs,
+  TabPane
 } from 'element-ui'
 
 // 面包屑公共组件
 import BreadCrumb from 'components/common/BreadCrumb'
 import TreeTable from 'vue-table-with-tree-grid'
-Vue.component(BreadCrumb.name,BreadCrumb)
-Vue.component('tree-table',TreeTable)
+Vue.component(BreadCrumb.name, BreadCrumb)
+Vue.component('tree-table', TreeTable)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
@@ -61,7 +64,10 @@ Vue.use(Dialog)
 Vue.use(Tag)
 Vue.use(Tree)
 Vue.use(Select)
-Vue.use(Option),
+Vue.use(Option)
 Vue.use(Cascader)
+Vue.use(Alert)
+Vue.use(Tabs)
+Vue.use(TabPane)
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$Message = Message

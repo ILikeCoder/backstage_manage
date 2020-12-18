@@ -39,7 +39,7 @@ const routes = [
       },
       {
         path: '/params',
-        component: () => import('views/params/Params')
+        component: () => import('views/goods/Params')
       },
       {
         path: '/categories',
