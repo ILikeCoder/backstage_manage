@@ -38,6 +38,10 @@ const routes = [
         component: () => import('views/goods/Goods')
       },
       {
+        path: '/goods/add',
+        component: () => import('views/goods/Addpage')
+      },
+      {
         path: '/params',
         component: () => import('views/goods/Params')
       },

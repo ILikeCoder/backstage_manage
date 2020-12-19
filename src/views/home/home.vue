@@ -130,7 +130,7 @@ export default {
   }
 }
 .el-aside {
-  transition: 0.3s;
+  transition: 0.25s;
   background-color: #333744;
   .el-menu {
     border-right: none;
