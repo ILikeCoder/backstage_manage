@@ -15,10 +15,7 @@
       >
         <!-- userName  prop- 对当前输入框验证 -->
         <el-form-item prop="username">
-          <el-input
-            v-model="loginForm.username"
-            prefix-icon="el-icon-s-custom"
-          ></el-input>
+          <el-input v-model="loginForm.username" prefix-icon="el-icon-s-custom"></el-input>
         </el-form-item>
         <!-- passWord 1102-->
         <el-form-item prop="password">
@@ -91,10 +88,7 @@ export default {
       if (!this.valid) return
       //发送登录验证请求
       let { data: res } = await this.$http.post('login', this.loginForm)
-
-      if (res.meta.status !== 200)
-        return this.$Message.error('亲~ 用户名或密码错误,请重新输入！')
-
+      if (res.meta.status !== 200) return this.$Message.error('亲~ 用户名或密码错误,请重新输入！')
       //登录成功的操作 在会话层保存token值,发送路由跳转
       this.token = res.data.token
       //在sessionStorage保存当前token
@@ -113,8 +107,9 @@ export default {
 
 <style lang="less" scoped>
 .login_container {
-  background-color: #2b4b6b;
+  background-color: #409eff;
   height: 100%;
+  overflow-x: hidden;
 }
 .login_box {
   height: 300px;

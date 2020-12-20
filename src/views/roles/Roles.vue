@@ -36,12 +36,9 @@
                 >
                   <!-- 二级权限 -->
                   <el-col :span="6">
-                    <el-tag
-                      type="success"
-                      closable
-                      @close="romveRightById(scoped.row, item2.id)"
-                      >{{ item2.authName }}</el-tag
-                    >
+                    <el-tag type="success" closable @close="romveRightById(scoped.row, item2.id)">{{
+                      item2.authName
+                    }}</el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
                   <el-col :span="18">
@@ -136,11 +133,7 @@
     </el-dialog>
 
     <!-- 编辑角色对话框 -->
-    <el-dialog
-      title="编辑角色"
-      :visible.sync="editRoleDialogVisible"
-      width="50%"
-    >
+    <el-dialog title="编辑角色" :visible.sync="editRoleDialogVisible" width="50%">
       <el-form :model="editForm" label-width="70px">
         <el-form-item label="角色名称">
           <el-input v-model="editForm.roleName"></el-input>
@@ -205,28 +198,21 @@ export default {
       //发送获取角色信息请求
       const { data: res } = await this.$http.get('roles')
 
-      if (res.meta.status !== 200)
-        return this.$Message.error('获取角色列表失败')
+      if (res.meta.status !== 200) return this.$Message.error('获取角色列表失败')
       //保存角色列表
       this.rolesList = res.data
     },
     //处理删除权限的操作
     async romveRightById(role, rightId) {
       //弹框提示删除
-      const confirmResult = await this.$confirm(
-        '此操作将永久删除该权限, 是否继续?',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).catch(err => err)
+      const confirmResult = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
       if (confirmResult !== 'confirm') return this.$Message.info('已取消删除')
       //发起删除用户信息的请求
-      const { data: res } = await this.$http.delete(
-        `roles/${role.id}/rights/${rightId}`
-      )
+      const { data: res } = await this.$http.delete(`roles/${role.id}/rights/${rightId}`)
       if (res.meta.status !== 200) return this.$Message.error('请求删除失败')
       this.$Message.success('删除成功')
       //删除权限时刷新小权限
@@ -238,8 +224,7 @@ export default {
       this.roleId = role.id
       //获取所有权限列表
       const { data: res } = await this.$http.get('rights/tree')
-      if (res.meta.status !== 200)
-        return this.$Message.error('获取用户权限数据失败！')
+      if (res.meta.status !== 200) return this.$Message.error('获取用户权限数据失败！')
       this.rightsList = res.data
 
       //递归获取3级节点的id
@@ -264,19 +249,12 @@ export default {
     async allotRights() {
       const { treeRef } = this.$refs
       //获取选中的权限
-      const keys = [
-        ...treeRef.getCheckedKeys(),
-        ...treeRef.getHalfCheckedKeys()
-      ]
+      const keys = [...treeRef.getCheckedKeys(), ...treeRef.getHalfCheckedKeys()]
       const idStr = keys.join(',')
-      const { data: res } = await this.$http.post(
-        `roles/${this.roleId}/rights`,
-        {
-          rids: idStr
-        }
-      )
-      if (res.meta.status !== 200)
-        return this.$Message.error('分配角色权限失败了')
+      const { data: res } = await this.$http.post(`roles/${this.roleId}/rights`, {
+        rids: idStr
+      })
+      if (res.meta.status !== 200) return this.$Message.error('分配角色权限失败了')
       this.$Message.success('分配权限操作完成')
 
       this.getRolesList()
@@ -327,24 +305,19 @@ export default {
         roleName,
         roleDesc
       })
-      if (res.meta.status !== 200)
-        return this.$Message.error('修改角色信息失败')
+      if (res.meta.status !== 200) return this.$Message.error('修改角色信息失败')
       this.$Message.success('修改角色信息完成')
       this.getRolesList()
       this.editRoleDialogVisible = false
     },
-
+    // 删除角色
     async deleteRole(id) {
-      const confirmResult = await this.$confirm(
-        '此操作将永久删除该角色, 是否继续?',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }
-      ).catch(err => err)
+      const confirmResult = await this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).catch(err => err)
       if (confirmResult !== 'confirm') return this.$Message.info('已经取消删除')
 
       const { data: res } = await this.$http.delete('roles/' + id)

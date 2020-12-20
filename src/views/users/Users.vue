@@ -14,18 +14,12 @@
             placeholder="请输入内容"
             v-model="queryInfo.query"
           >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="getUserList"
-            ></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
           <!-- 添加用户功能 点击的时候弹出对话框 -->
-          <el-button type="primary" @click="addDialogVisible = true"
-            >添加用户</el-button
-          >
+          <el-button type="primary" @click="addDialogVisible = true">添加用户</el-button>
         </el-col>
       </el-row>
       <!-- 用户列表区域  data是数据源 边框 鼠标覆盖高亮-->
@@ -98,12 +92,7 @@
         @close="addDialogClosed"
       >
         <!-- 内容主体区域 -->
-        <el-form
-          ref="addUserFormRef"
-          label-width="70px"
-          :model="addForm"
-          :rules="addFormRules"
-        >
+        <el-form ref="addUserFormRef" label-width="70px" :model="addForm" :rules="addFormRules">
           <el-form-item label="用户名" prop="username">
             <el-input v-model="addForm.username"></el-input>
           </el-form-item>
@@ -133,12 +122,7 @@
         @close="editDialogClosed"
       >
         <!-- 内容主体区域 -->
-        <el-form
-          :model="editForm"
-          :rules="editFormRules"
-          ref="editFormRef"
-          label-width="70px"
-        >
+        <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px">
           <el-form-item label="用户名">
             <el-input v-model="editForm.username" disabled></el-input>
           </el-form-item>
@@ -373,9 +357,7 @@ export default {
     },
     //监听switch开关的变化
     async userStateChanged(userInfo) {
-      const { data: res } = await this.$http.put(
-        `/users/${userInfo.id}/state/${userInfo.mg_state}`
-      )
+      const { data: res } = await this.$http.put(`/users/${userInfo.id}/state/${userInfo.mg_state}`)
       if (res.meta.status !== 200) {
         this.$Message.error('更新用户数据失败')
         userInfo.mg_state = !userInfo.mg_state
@@ -402,8 +384,7 @@ export default {
       if (!this.valid) return
       // 发送添加用户的请求
       const { data: res } = await this.$http.post('users', this.addForm)
-      if (res.meta.status !== 201)
-        return this.$Message.error('添加用户数据失败!')
+      if (res.meta.status !== 201) return this.$Message.error('添加用户数据失败!')
       this.$Message.success('添加用户数据成功~')
       //关闭添加用户对话框
       this.addDialogVisible = false
@@ -441,9 +422,7 @@ export default {
         email,
         mobile
       })
-      // 如果状态不登录200
-      if (res.meta.status !== 200)
-        return this.$Message.error('修改用户数据失败')
+      if (res.meta.status !== 200) return this.$Message.error('修改用户数据失败')
       this.$Message.success('修改用户数据成功!')
       // 刷新用户数据
       this.getUserList()
@@ -452,15 +431,11 @@ export default {
     },
     //删除用户信息
     async removeUserById(id) {
-      const confirmResult = await this.$confirm(
-        '此操作将永久删除该用户, 是否继续?',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).catch(err => err)
+      const confirmResult = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
       //如果删除了返回字符串 confirm 否则 cancel
       if (confirmResult !== 'confirm') return this.$Message.info('已取消删除')
       //发起删除用户信息的请求
@@ -475,8 +450,7 @@ export default {
       this.userInfo = userInfo
       // 在展示对话框之前，获取所有角色的列表
       const { data: res } = await this.$http.get('roles')
-      if (res.meta.status !== 200)
-        return this.$Message.error('获取角色列表失败')
+      if (res.meta.status !== 200) return this.$Message.error('获取角色列表失败')
       this.rolesList = res.data
       this.setRoleDialogVisible = true
     },
@@ -484,12 +458,9 @@ export default {
     async saveRoleInfo() {
       if (!this.selectedRoleId) return this.$Message.error('请选择要分配的角色')
 
-      const { data: res } = await this.$http.put(
-        `users/${this.userInfo.id}/role`,
-        {
-          rid: this.selectedRoleId
-        }
-      )
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`, {
+        rid: this.selectedRoleId
+      })
 
       if (res.meta.status !== 200) return this.$Message.error('分配角色失败')
 

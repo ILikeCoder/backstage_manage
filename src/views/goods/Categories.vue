@@ -7,9 +7,7 @@
     <el-card>
       <el-row>
         <el-col>
-          <el-button type="primary" @click="showAddCateDialog"
-            >添加分类</el-button
-          >
+          <el-button type="primary" @click="showAddCateDialog">添加分类</el-button>
         </el-col>
       </el-row>
 
@@ -37,12 +35,7 @@
         <!-- 排序 -->
         <template slot="order" slot-scope="scope">
           <el-tag v-if="scope.row.cat_level === 0" size="mini">一级</el-tag>
-          <el-tag
-            v-else-if="scope.row.cat_level === 1"
-            type="success"
-            size="mini"
-            >二级</el-tag
-          >
+          <el-tag v-else-if="scope.row.cat_level === 1" type="success" size="mini">二级</el-tag>
           <el-tag v-else type="warning" size="mini">三级</el-tag>
         </template>
         <!-- 操作 -->
@@ -78,12 +71,7 @@
     </el-card>
 
     <!-- 添加分类 -->
-    <el-dialog
-      title="提示"
-      :visible.sync="dialogVisible"
-      width="50%"
-      @close="closedDialog"
-    >
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="50%" @close="closedDialog">
       <el-form
         :model="addCateForm"
         :rules="addCateFormRules"
@@ -218,8 +206,7 @@ export default {
         params: this.queryInfo
       })
 
-      if (res.meta.status !== 200)
-        return this.$Message.error('获取商品数据失败')
+      if (res.meta.status !== 200) return this.$Message.error('获取商品数据失败')
 
       this.cateList = res.data.result
       this.total = res.data.total
@@ -246,8 +233,7 @@ export default {
           type: 2
         }
       })
-      if (res.meta.status !== 200)
-        return this.$Message.error('获取分类数据失败')
+      if (res.meta.status !== 200) return this.$Message.error('获取分类数据失败')
 
       this.parentCateList = res.data
     },
@@ -265,10 +251,7 @@ export default {
     async addCate() {
       this.$refs.addCateFormRef.validate(valid => (this.valid = valid))
       if (!this.valid) return
-      const { data: res } = await this.$http.post(
-        'categories',
-        this.addCateForm
-      )
+      const { data: res } = await this.$http.post('categories', this.addCateForm)
       if (res.meta.status !== 201) {
         return this.$Message.error('添加失败')
       }
@@ -285,15 +268,11 @@ export default {
     },
     //删除当前分类
     async deleteCate(id) {
-      const confirmResult = await this.$confirm(
-        '此操作将永久删除该用户, 是否继续?',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).catch(err => err)
+      const confirmResult = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
       //如果删除了返回字符串 confirm 否则 cancel
       if (confirmResult !== 'confirm') return this.$Message.info('已取消删除')
       const { data: res } = await this.$http.delete('categories/' + id)
@@ -310,12 +289,9 @@ export default {
     },
     // 编辑分类对话框
     async editCateInfo() {
-      const { data: res } = await this.$http.put(
-        'categories/' + this.currentId,
-        {
-          cat_name: this.editCateForm.cat_name
-        }
-      )
+      const { data: res } = await this.$http.put('categories/' + this.currentId, {
+        cat_name: this.editCateForm.cat_name
+      })
       if (res.meta.status !== 200) return this.$Message.error('修改失败了！')
       this.$Message.success('修改成功~')
       this.getCateList()
@@ -330,7 +306,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .tree-table {
   margin-top: 20px;
 }

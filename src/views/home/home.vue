@@ -25,11 +25,7 @@
           :default-active="activePath"
         >
           <!-- 一级菜单 -->
-          <el-submenu
-            v-for="item in menuList"
-            :index="item.id + ''"
-            :key="item.id"
-          >
+          <el-submenu v-for="item in menuList" :index="item.id + ''" :key="item.id">
             <template slot="title">
               <!-- 图标 -->
               <i :class="iconObj[item.id]"></i>
@@ -93,9 +89,11 @@ export default {
       window.sessionStorage.removeItem('token')
       this.$router.push('/login')
     },
+    // 折叠左侧菜单栏
     toggleCollapse() {
       this.isToggle = !this.isToggle
     },
+    // 保存菜单的上一次选择。
     saveNavState(activePath) {
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath

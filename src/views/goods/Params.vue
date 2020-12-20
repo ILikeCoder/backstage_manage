@@ -58,20 +58,13 @@
                   @blur="handleInputConfirm(scope.row)"
                 >
                 </el-input>
-                <el-button
-                  v-else
-                  class="button-new-tag"
-                  size="small"
-                  @click="showInput(scope.row)"
+                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)"
                   >+ New Tag</el-button
                 >
               </template>
             </el-table-column>
             <el-table-column type="index"></el-table-column>
-            <el-table-column
-              label="参数名称"
-              prop="attr_name"
-            ></el-table-column>
+            <el-table-column label="参数名称" prop="attr_name"></el-table-column>
             <el-table-column label="操作">
               <template v-slot="scope">
                 <el-button
@@ -126,20 +119,13 @@
                   @blur="handleInputConfirm(scope.row)"
                 >
                 </el-input>
-                <el-button
-                  v-else
-                  class="button-new-tag"
-                  size="small"
-                  @click="showInput(scope.row)"
+                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)"
                   >+ New Tag</el-button
                 >
               </template>
             </el-table-column>
             <el-table-column type="index"></el-table-column>
-            <el-table-column
-              label="参数名称"
-              prop="attr_name"
-            ></el-table-column>
+            <el-table-column label="参数名称" prop="attr_name"></el-table-column>
             <el-table-column label="操作">
               <template v-slot="scope">
                 <el-button
@@ -169,12 +155,7 @@
       @close="closedDialog"
       width="50%"
     >
-      <el-form
-        :model="addForm"
-        :rules="addFormRules"
-        ref="addFormRef"
-        label-width="100px"
-      >
+      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
         <el-form-item :label="titleText | filterText" prop="attr_name">
           <el-input v-model="addForm.attr_name"></el-input>
         </el-form-item>
@@ -186,11 +167,7 @@
     </el-dialog>
 
     <!-- 编辑参数对话框 -->
-    <el-dialog
-      title="编辑参数"
-      :visible.sync="editAttrDialogVisible"
-      width="50%"
-    >
+    <el-dialog title="编辑参数" :visible.sync="editAttrDialogVisible" width="50%">
       <el-form :model="addForm" label-width="100px">
         <el-form-item label="参数名称:">
           <el-input v-model="addForm.attr_name"></el-input>
@@ -253,8 +230,7 @@ export default {
     //获取所有商品的分类
     async getCateList() {
       const { data: res } = await this.$http.get('categories')
-      if (res.meta.status !== 200)
-        return this.$Message.error('获取商品分类数据失败')
+      if (res.meta.status !== 200) return this.$Message.error('获取商品分类数据失败')
       this.cateList = res.data
     },
     handleChange() {
@@ -265,21 +241,18 @@ export default {
       this.getParamsData()
     },
     async getParamsData() {
+      // 当级联选择框没有选择则没有数据
       if (this.selectdCateKeys.length !== 3) {
         this.selectdCateKeys = []
         this.manyTableData = []
         this.onlyTableData = []
       }
-      const { data: res } = await this.$http.get(
-        `categories/${this.cateId}/attributes`,
-        {
-          params: {
-            sel: this.activeName
-          }
+      const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes`, {
+        params: {
+          sel: this.activeName
         }
-      )
-      if (res.meta.status !== 200)
-        return this.$Message.error('当前分类没有参数')
+      })
+      if (res.meta.status !== 200) return this.$Message.error('当前分类没有参数')
 
       res.data.forEach(item => {
         item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
@@ -290,6 +263,7 @@ export default {
       if (this.activeName === 'many') this.manyTableData = res.data
       if (this.activeName === 'only') this.onlyTableData = res.data
     },
+    // 关闭对话框重置表单
     closedDialog() {
       this.$refs.addFormRef.resetFields()
     },
@@ -297,13 +271,10 @@ export default {
       const { attr_name } = this.addForm
       this.$refs.addFormRef.validate(valid => (this.valid = valid))
       if (!this.valid) return
-      const { data: res } = await this.$http.post(
-        `categories/${this.cateId}/attributes`,
-        {
-          attr_name,
-          attr_sel: this.activeName
-        }
-      )
+      const { data: res } = await this.$http.post(`categories/${this.cateId}/attributes`, {
+        attr_name,
+        attr_sel: this.activeName
+      })
 
       if (res.meta.status !== 201) return this.$Message.error('添加参数失败')
       this.$Message.success('添加参数成功')
@@ -311,15 +282,15 @@ export default {
       this.addDialogVisible = false
       this.getParamsData()
     },
+    // 编辑属性
     async editAttr(id) {
-      const { data: res } = await this.$http.get(
-        `categories/${this.cateId}/attributes/${id}`
-      )
+      const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes/${id}`)
       if (res.meta.status !== 200) return this.$Message.error('查询id失败')
       this.addForm = res.data
       this.currentId = id
       this.editAttrDialogVisible = true
     },
+    // 修改属性
     async allotEditAttr() {
       const { attr_name } = this.addForm
       const { data: res } = await this.$http.put(
@@ -330,21 +301,17 @@ export default {
         }
       )
       if (res.meta.status !== 200) return this.$Message.error('编辑参数失败')
-
       this.$Message.success('编辑参数成功')
       this.getParamsData()
       this.editAttrDialogVisible = false
     },
+    // 删除属性
     async deleteAttr(attr_id) {
-      const confirmResult = await this.$confirm(
-        '此操作将永久删除该权限, 是否继续?',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).catch(err => err)
+      const confirmResult = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
       if (confirmResult !== 'confirm') return this.$Message.info('已取消删除')
       //发起删除用户信息的请求
       const { data: res } = await this.$http.delete(
@@ -384,9 +351,9 @@ export default {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },
+    // 删除Tag标签
     async handleClose(index, row) {
       row.attr_vals.splice(index, 1)
-
       const { data: res } = await this.$http.put(
         `categories/${this.cateId}/attributes/${row.attr_id}`,
         {

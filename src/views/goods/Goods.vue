@@ -13,11 +13,7 @@
             clearable
             @clear="getGoodsList"
           >
-            <el-button
-              slot="append"
-              icon="el-icon-search"
-              @click="getGoodsList"
-            ></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="getGoodsList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -34,11 +30,7 @@
             {{ '￥' + scope.row.goods_price }}
           </template>
         </el-table-column>
-        <el-table-column
-          label="商品总量"
-          prop="goods_weight"
-          width="120px"
-        ></el-table-column>
+        <el-table-column label="商品总量" prop="goods_weight" width="120px"></el-table-column>
         <el-table-column label="创建时间" width="180px">
           <template v-slot="scope">
             {{ time(scope) }}
@@ -46,11 +38,7 @@
         </el-table-column>
         <el-table-column label="操作" width="130px">
           <template v-slot="scope">
-            <el-button
-              type="primary"
-              icon="el-icon-edit"
-              size="mini"
-            ></el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -106,33 +94,32 @@ export default {
       const { data: res } = await this.$http.get('goods', {
         params: this.queryInfo
       })
-      if (res.meta.status !== 200)
-        return this.$Message.error('获取商品数据失败')
+      if (res.meta.status !== 200) return this.$Message.error('获取商品数据失败')
       this.goodsList = res.data.goods
       this.total = res.data.total
     },
+    // 计算毫秒
     time(scope) {
       let timeFormat = this.$options.filters['dateFormat']
       return timeFormat(scope.row.add_time * 1050)
     },
+    // 处理显示多少条数据
     handleSizeChange(newSize) {
       this.queryInfo.pagesize = newSize
       this.getGoodsList()
     },
+    // 当前是第几页
     handleCurrentChange(newPage) {
       this.queryInfo.pagenum = newPage
       this.getGoodsList()
     },
+    // 删除操作
     async removeById(row) {
-      const confirmResult = await this.$confirm(
-        '此操作将永久删除该商品, 是否继续?',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).catch(err => err)
+      const confirmResult = await this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
       //如果删除了返回字符串 confirm 否则 cancel
       if (confirmResult !== 'confirm') return this.$Message.info('已取消删除')
       //发起删除用户信息的请求
@@ -142,11 +129,13 @@ export default {
       // 删除成功刷新列表
       this.getGoodsList()
     },
-    goAddpage(){
+    // 添加商品的路由跳转
+    goAddpage() {
       this.$router.push('/goods/add')
     }
   },
   filters: {
+    // 过滤器过滤毫秒->现在时间
     dateFormat(originVal) {
       const dt = new Date(originVal)
       const y = dt.getFullYear()
@@ -155,7 +144,6 @@ export default {
       const hh = (dt.getHours() + '').padStart(2, '0')
       const mm = (dt.getMinutes() + '').padStart(2, '0')
       const ss = (dt.getSeconds() + '').padStart(2, '0')
-
       return `${y}-${m}-${d}-${hh}:${mm}:${ss}`
     }
   }

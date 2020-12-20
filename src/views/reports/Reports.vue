@@ -13,6 +13,7 @@ import _ from 'loadsh'
 export default {
   data() {
     return {
+      // 面包屑数据
       content: [
         { content: '首页', path: { path: '/home' } },
         { content: '数据统计', path: '' },
@@ -54,8 +55,7 @@ export default {
 
   async mounted() {
     const { data: res } = await this.$http.get('reports/type/1')
-    if (res.meta.status !== 200)
-      return this.$Message.error('获取报表数据失败了')
+    if (res.meta.status !== 200) return this.$Message.error('获取报表数据失败了')
     this.options = _.merge(res.data, this.options)
     let mycharts = echarts.init(document.getElementById('main'))
     mycharts.setOption(this.options)
