@@ -9,7 +9,6 @@ export default {
   name: 'app'
 }
 </script>
-
 <style>
 @import url('./assets/css/global.css');
 </style>
