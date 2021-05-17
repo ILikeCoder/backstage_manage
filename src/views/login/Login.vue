@@ -66,9 +66,9 @@ export default {
             trigger: 'blur'
           },
           {
-            min: 6,
+            min: 5,
             max: 18,
-            message: '长度在 6-18 个字符',
+            message: '长度在 5-18 个字符',
             trigger: 'blur'
           }
         ]

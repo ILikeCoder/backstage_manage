@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-03-04 11:33:55
+ * @LastEditTime: 2021-05-17 16:05:17
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \backstage_manage\src\router\index.js
+ */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -14,7 +22,7 @@ const routes = [
   },
   {
     path: '/home',
-    redirect: '/welcome',
+    redirect: '/users',
     component: () => import('views/home/Home'),
     children: [
       {
